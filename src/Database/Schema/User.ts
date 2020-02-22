@@ -2,22 +2,12 @@ import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import LinkInterface from '../../App/Interfaces/LinkInterface';
-
-export interface UserInterface extends Document {
-  _id: string;
-  name: string;
-  email: string;
-  password: string;
-  tokens: [string];
-  links: [LinkInterface];
-  generateAuthToken(): string;
-  findByCredentials(): UserInterface;
-}
+import UserInterface from '../../App/Interfaces/UserInterface';
 
 const UserSchema = new Schema(
   {
     name: String,
+    usernick: String,
     email: String,
     password: String,
     links: [

@@ -1,15 +1,9 @@
 import { Request } from 'express';
 
-import LinkInterface from './LinkInterface';
+import UserInterface from './UserInterface';
 
 interface AuthRequest extends Request {
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-    tokens: [string];
-    links: [LinkInterface];
-  };
+  user: UserInterface;
   token: string;
 }
 
