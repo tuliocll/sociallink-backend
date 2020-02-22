@@ -8,7 +8,7 @@ interface UserInterface extends Document {
   email: string;
   password: string;
   tokens: [string];
-  links: [LinkInterface];
+  links: LinkInterface[];
   generateAuthToken(): string;
   findByCredentials(): UserInterface;
 }

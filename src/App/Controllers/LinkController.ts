@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import * as Yup from 'yup';
+import arrayMove from 'array-move';
 
 import User from '../../Database/Schema/User';
 import AuthInterface from '../Interfaces/AuthInterface';
@@ -58,7 +59,6 @@ class LinkController {
     }
 
     const { _id, position }: { _id: string; position: number } = req.body;
-    console.log(typeof position);
 
     try {
       const user = await User.findOne({ _id: req.user._id });
@@ -66,43 +66,21 @@ class LinkController {
       // Verificar se o link pertence ao usuario logado
       const linkAlter = user.links.find(link => link._id.toString() === _id);
       if (!linkAlter) {
-        return res.json({ error: 'Sem permissão1' });
+        return res.json({ error: 'Sem permissão' });
       }
+
+      // Verifica se a posicao enviada não é igual a posicao ja existente
       if (linkAlter.position.toPrecision(1) === position.toPrecision(1)) {
-        return res.json({ error: 'Sem permissão2' });
+        return res.json({ error: 'Sem permissão' });
       }
 
-      // ta bugado na hora de reordenar, o link]Alter ta atualizando a posicao
+      // Reordena o array com base na nova posicao
+      const reorded: LinkInterface[] = arrayMove(user.links, linkAlter.position, position);
 
-      user.links.forEach(link => {
-        console.log(
-          linkAlter.position.toPrecision(1) < link.position.toPrecision(1),
-          //position.toPrecision(1) >= link.position.toPrecision(1),
-          position.toPrecision(1),
-          link.position.toPrecision(1),
-        );
-        // Se o id for igual, coloco a nova posicao
-        if (link._id == _id) {
-          link.position = position;
-        }
-
-        // Se a posicao do item for maior, desço ela
-        if (
-          linkAlter.position.toPrecision(1) > link.position.toPrecision(1) &&
-          link.position.toPrecision(1) <= position.toPrecision(1)
-        ) {
-          link.position = link.position - 1;
-          console.log(link.name, 'fgh');
-        }
-
-        // Se a posicao do item for menor, subo ela
-        if (
-          linkAlter.position.toPrecision(1) < link.position.toPrecision(1) &&
-          link.position.toPrecision(1) >= position.toPrecision(1)
-        ) {
-          link.position = link.position + 1;
-          console.log(link.name, 'asd');
-        }
+      // Atualiza o valor da posicao
+      user.links = reorded.map((link, index) => {
+        link.position = index;
+        return link;
       });
 
       user.save();
