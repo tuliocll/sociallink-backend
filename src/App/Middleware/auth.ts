@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Response, NextFunction } from 'express';
 
 import User from '../../Database/Schema/User';
-import AuthInterface from '../Interfaces/AuthInterface';
+import { AuthInterface } from '../Interfaces';
 
 const auth = async (req: AuthInterface, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;

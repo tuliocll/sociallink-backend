@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import LinkInterface from './LinkInterface';
+import { LinkInterface } from './';
 
 interface UserInterface extends Document {
   _id: string;

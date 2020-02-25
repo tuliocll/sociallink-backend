@@ -3,8 +3,7 @@ import * as Yup from 'yup';
 import arrayMove from 'array-move';
 
 import User from '../../Database/Schema/User';
-import AuthInterface from '../Interfaces/AuthInterface';
-import LinkInterface from '../Interfaces/LinkInterface';
+import { AuthInterface, LinkInterface } from '../Interfaces';
 
 class LinkController {
   public async index(req: AuthInterface, res: Response): Promise<Response> {
@@ -69,12 +68,12 @@ class LinkController {
         return res.json({ error: 'Sem permissão' });
       }
 
-      // Verifica se a posicao enviada não é igual a posicao ja existente
+      // Verifica se a posicao enviada é igual a posicao ja existente na base
       if (linkAlter.position.toPrecision(1) === position.toPrecision(1)) {
         return res.json({ error: 'Sem permissão' });
       }
 
-      // Reordena o array com base na nova posicao
+      // Reordena o array com base na nova posicao (move o item)
       const reorded: LinkInterface[] = arrayMove(user.links, linkAlter.position, position);
 
       // Atualiza o valor da posicao

@@ -1,8 +1,8 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import UserInterface from '../../App/Interfaces/UserInterface';
+import { UserInterface } from '../../App/Interfaces';
 
 const UserSchema = new Schema(
   {
@@ -53,15 +53,16 @@ UserSchema.methods.generateAuthToken = async function() {
 };
 
 // Pesquisar pelo usuario pelo nome e senha (login)
+// TODO: mover essa regra pra um controller de auth
 UserSchema.statics.findByCredentials = async (email: string, password: string) => {
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error('Invalid login credentials1');
+    throw new Error('Usuario não encontrado');
   }
   const isPasswordMatch = await bcrypt.compare(password, user.password);
 
   if (!isPasswordMatch) {
-    throw new Error('Invalid login credentials2');
+    throw new Error('Usuario não encontrado');
   }
   return user;
 };

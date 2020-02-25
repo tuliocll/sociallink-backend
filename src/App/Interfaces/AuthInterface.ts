@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import UserInterface from './UserInterface';
+import { UserInterface } from './';
 
 interface AuthRequest extends Request {
   user: UserInterface;
